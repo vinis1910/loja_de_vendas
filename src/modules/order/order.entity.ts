@@ -1,8 +1,5 @@
 import {Entity,
         Column,
-        CreateDateColumn,
-        UpdateDateColumn,
-        DeleteDateColumn,
         PrimaryGeneratedColumn,
         OneToMany,
         ManyToOne
@@ -10,9 +7,10 @@ import {Entity,
 import { OrderStatus } from "./enum/orderstatus.enum";
 import { UserEntity } from "../user/user.entity";
 import { OrderItemEntity } from './orderitem.entity';
+import { AuditModel } from '../auditModel/audit-model.entity';
 
 @Entity('orders')
-export class OrderEntity{
+export class OrderEntity extends AuditModel{
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -22,15 +20,6 @@ export class OrderEntity{
 
     @Column({name: 'status',enum: OrderStatus, nullable: false})
     status: OrderStatus;
-
-    @CreateDateColumn({ name: 'created_at' })
-    createdAt: string;
-
-    @UpdateDateColumn({ name: 'updated_at' })
-    updatedAt: string;
-
-    @DeleteDateColumn({ name: 'deleted_at' })
-    deletedAt: string;
 
     @ManyToOne(() => UserEntity, (user) => user.order)
     user: UserEntity;

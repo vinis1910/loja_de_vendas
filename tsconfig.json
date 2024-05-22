@@ -19,6 +19,6 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
   },
-  "include": ["src/**/*"],                          // Incluir todos os arquivos no diretório src
-  "exclude": ["node_modules"]                       // Excluir o diretório node_modules
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

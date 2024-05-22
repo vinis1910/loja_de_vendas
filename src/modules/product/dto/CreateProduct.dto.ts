@@ -6,14 +6,12 @@ import {
   IsNumber,
   IsString,
   IsUrl,
-  IsUUID,
   MaxLength,
   Min,
   ValidateNested,
 } from 'class-validator';
 import { ProductEntity } from '../product.entity';
 import { UUID } from 'crypto';
-import { UserEntity } from 'src/user/user.entity';
 
 export class CharacteristicsProductDTO {
   id: UUID;

@@ -1,15 +1,13 @@
-import { OrderEntity } from "src/order/order.entity";
+import { OrderEntity } from "src/modules/order/order.entity";
 import {Entity,
         Column,
-        CreateDateColumn,
-        UpdateDateColumn,
-        DeleteDateColumn,
         PrimaryGeneratedColumn,
         OneToMany
     } from 'typeorm'
+import { AuditModel } from "../auditModel/audit-model.entity";
 
 @Entity('users')
-export class UserEntity{
+export class UserEntity extends AuditModel{
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -22,15 +20,6 @@ export class UserEntity{
 
     @Column({name: 'password', nullable: false})
     password: string;
-
-    @CreateDateColumn({ name: 'created_at' })
-    createdAt: string;
-
-    @UpdateDateColumn({ name: 'updated_at' })
-    updatedAt: string;
-
-    @DeleteDateColumn({ name: 'deleted_at' })
-    deletedAt: string;
 
     @OneToMany(() => OrderEntity, (order) => order.user)
     order: OrderEntity[];

@@ -6,11 +6,13 @@ import {
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 
 import { UpdateProductDTO } from './dto/UpdateProduct.dto';
 import { ProductService } from './product.service';
 import { CreateProductDTO } from './dto/CreateProduct.dto';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('products')
 export class ProductController {
@@ -18,21 +20,25 @@ export class ProductController {
 
   @Post()
   async create(@Body() dto: CreateProductDTO) {
-    const produtoCadastrado = this.productRepository.create(dto);
-
-    return produtoCadastrado;
+    return await this.productRepository.create(dto);
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
   async listAll() {
     return this.productRepository.listAll();
   }
 
+  @Get('/:id')
+  @UseInterceptors(CacheInterceptor)
+  async findById(@Param('id') productId: string) {
+    return await this.productRepository.findById(productId);
+  }
+
+
   @Put('/:id')
   async update(@Param('id') id: string, @Body() dadosProduto: UpdateProductDTO,) {
-    const produtoAlterado = await this.productRepository.update(id, dadosProduto);
-
-    return 
+    return await this.productRepository.update(id, dadosProduto);
   }
 
   @Delete('/:id')

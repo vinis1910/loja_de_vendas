@@ -1,21 +1,16 @@
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
 } from "typeorm";
 import { ProductCharacteristicEntity } from "./product_characteristic.entity";
 import { ImageProductEntity } from "./product_image.entity";
-import { UUID } from "crypto";
-import { UserEntity } from "src/user/user.entity";
-import { OrderItemEntity } from "src/order/orderitem.entity";
+import { OrderItemEntity } from "src/modules/order/orderitem.entity";
+import { AuditModel } from "../auditModel/audit-model.entity";
 
 @Entity('products')
-export class ProductEntity {
+export class ProductEntity extends AuditModel{
 
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -34,15 +29,6 @@ export class ProductEntity {
 
   @Column({ name: 'category', length: 100, nullable: false })
   category: string;
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Date;
 
   @OneToMany(() => ProductCharacteristicEntity, (characteristic) => characteristic.product, { cascade: true, eager: true })
   characteristics: ProductCharacteristicEntity[];
