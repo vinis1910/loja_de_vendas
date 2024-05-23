@@ -1,11 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseInterceptors } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards, UseInterceptors } from "@nestjs/common"
 import { CreateUserDto } from "./dto/CreateUser.dto";
 import { UserEntity } from "./user.entity";
 import { UpdateUserDto } from "./dto/UpdateUserDto.dto copy";
 import { UserService } from "./user.service";
 import { CacheInterceptor } from "@nestjs/cache-manager";
 import { PasswordHasherPipe } from "src/pipes/password-hasher";
+import { AuthGuard } from "../auth/auth.guard";
+import { UserRequest } from "../auth/interfaces/userRequest.interface";
 
+@UseGuards(AuthGuard)
 @Controller('/users')
 export class UserController {
     constructor(
@@ -24,13 +27,13 @@ export class UserController {
 
 
     @Put('/:id')
-    async update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
-        return this.userService.update(id, dto);
+    async update(@Req() request: UserRequest, @Body() dto: UpdateUserDto) {
+        return this.userService.update(request.user.sub , dto);
     }
 
     @Delete('/:id')
-    async delete(@Param('id') id: string) {
-        return this.userService.delete(id);
+    async delete(@Req() request: UserRequest,) {
+        return this.userService.delete(request.user.sub);
     }
 
     @Get()

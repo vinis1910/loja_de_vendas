@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 
@@ -13,13 +14,23 @@ import { UpdateProductDTO } from './dto/UpdateProduct.dto';
 import { ProductService } from './product.service';
 import { CreateProductDTO } from './dto/CreateProduct.dto';
 import { CacheInterceptor } from '@nestjs/cache-manager';
+import { AuthGuard } from '../auth/auth.guard';
+import { CustomLogger } from '../customLogger/custom-logger.service';
 
+@UseGuards(AuthGuard)
 @Controller('products')
 export class ProductController {
-  constructor(private readonly productRepository: ProductService) { }
+  constructor(
+    private readonly productRepository: ProductService,
+    private readonly logger: CustomLogger
+  ) { 
+    this.logger.setContext('ProdutoController');
+  }
 
   @Post()
   async create(@Body() dto: CreateProductDTO) {
+    this.logger.logInFile(dto);
+    this.logger.colorLog(dto);
     return await this.productRepository.create(dto);
   }
 

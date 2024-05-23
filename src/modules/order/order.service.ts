@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
@@ -37,7 +37,7 @@ export class OrderService {
     }
 
     const order = new OrderEntity();
-    order.status = OrderStatus.PROCESSING;
+    order.status = OrderStatus.PENDING;
     order.user = user;
 
     const orderItems = dto.orderItems.map((orderItem) => {
@@ -45,18 +45,18 @@ export class OrderService {
       if (!relatedProduct) {
         throw new NotFoundException(`Produto com o ID ${orderItem.productId} não foi encontrado`);
       }
-    
+
       const orderItemEntity = new OrderItemEntity();
       orderItemEntity.product = relatedProduct;
       orderItemEntity.orderPrice = relatedProduct.price;
       orderItemEntity.quantity = orderItem.quantity;
-    
+
       if (orderItem.quantity > relatedProduct.quantity) {
         throw new BadRequestException('Quantidade não disponível em estoque');
       }
-    
+
       relatedProduct.quantity -= orderItem.quantity;
-    
+
       return orderItemEntity;
     });
 
@@ -70,14 +70,23 @@ export class OrderService {
     return await this.orderRepository.save(order);
   }
 
-  async update(id: string, dto: UpdateOrderDto) {
-    const order = await this.orderRepository.findOneBy({ id });
+  async update(userId: string, id: string, dto: UpdateOrderDto) {
+    const order = await this.orderRepository.findOne({
+      where: { id },
+      relations: { user: true },
+    });
 
     if (!order) {
       throw new NotFoundException(`O pedido com ID: ${id} não foi encontrado`);
     }
 
-    Object.assign(order, dto as UserEntity);
+    if (order.user.id !== userId) {
+      throw new ForbiddenException(
+        'Você não tem autorização para atualizar esse pedido',
+      );
+    }
+
+    Object.assign(order, dto as OrderEntity);
 
     return this.orderRepository.save(order);
   }

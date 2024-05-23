@@ -66,41 +66,17 @@ export class ProductService {
 
   async create(dto: CreateProductDTO): Promise<ProductEntity> {
 
-    const product = new ProductEntity();
+    const productEntity = new ProductEntity();
 
-    product.id = randomUUID();
-    product.name = dto.name;
-    product.price = dto.price;
-    product.quantity = dto.quantity;
-    product.description = dto.description;
-    product.category = dto.category;
-
-    product.characteristics = dto.characteristics.map(charDto => this.createCharacteristicEntity(charDto, product));
-    product.images = dto.images.map(imgDto => this.createImageEntity(imgDto, product));
+    Object.assign(productEntity, dto as ProductEntity);
 
     try {
-      await this.productRepository.save(product);
+      await this.productRepository.save(productEntity);
 
-      return product;
+      return productEntity;
     } catch (error) {
       throw new Error(`Falha ao criar o produto. Error: ${error.message}`);
     }
-  }
-
-  private createCharacteristicEntity(charDto: CharacteristicsProductDTO, product: ProductEntity): ProductCharacteristicEntity {
-    const characteristic = new ProductCharacteristicEntity();
-    characteristic.name = charDto.name;
-    characteristic.description = charDto.description;
-    characteristic.product = product;
-    return characteristic;
-  }
-
-  private createImageEntity(imgDto: ImageProductDTO, product: ProductEntity): ImageProductEntity {
-    const image = new ImageProductEntity();
-    image.url = imgDto.url;
-    image.description = imgDto.description;
-    image.product = product;
-    return image;
   }
 
 

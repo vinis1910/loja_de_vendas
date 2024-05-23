@@ -5,6 +5,7 @@ import {Entity,
         OneToMany
     } from 'typeorm'
 import { AuditModel } from "../auditModel/audit-model.entity";
+import { Exclude } from "class-transformer";
 
 @Entity('users')
 export class UserEntity extends AuditModel{
@@ -18,6 +19,7 @@ export class UserEntity extends AuditModel{
     @Column({name: 'email', nullable: false})
     email: string;
 
+    @Exclude()
     @Column({name: 'password', nullable: false})
     password: string;
 

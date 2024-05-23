@@ -30,9 +30,13 @@ export class ProductEntity extends AuditModel{
   @Column({ name: 'category', length: 100, nullable: false })
   category: string;
 
-  @OneToMany(() => ProductCharacteristicEntity, (characteristic) => characteristic.product, { cascade: true, eager: true })
+  @OneToMany(
+    () => ProductCharacteristicEntity,
+    (productCharacteristicEntity) => productCharacteristicEntity.product,
+    { cascade: true, eager: true },
+  )
   characteristics: ProductCharacteristicEntity[];
-
+  
   @OneToMany(() => ImageProductEntity, (image) => image.product, { cascade: true, eager: true })
   images: ImageProductEntity[];
 
