@@ -11,6 +11,7 @@ import { redisStore } from 'cache-manager-redis-yet';
 import { AuthModule } from './modules/auth/auth.module';
 import { GlobalExceptionFilter } from './filterException/global-exception-filter';
 import { GlobalLoggerInterceptor } from './interceptors/global-logger/global-logger.interceptor';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -24,7 +25,11 @@ import { GlobalLoggerInterceptor } from './interceptors/global-logger/global-log
       isGlobal: true,
     }),
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
+      envFilePath: [
+        join(__dirname, '..', `.env.${process.env.NODE_ENV}`),
+        join(__dirname, '..', '.env'),
+      ]
     }),
     TypeOrmModule.forRootAsync({
       useClass: PostgresConfigService,
