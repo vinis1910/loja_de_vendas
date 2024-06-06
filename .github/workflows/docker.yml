@@ -31,4 +31,4 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: martins1910/nestjs_ci:${{github.ref_name}}
+        tags: martins1910/nestjs_ci::${{ env.sanitized_ref }}-${{ github.sha }}
