@@ -1,7 +1,7 @@
 name: EC2
 
 on:
-  workflor_call:
+  workflow_call:
 
 jobs:
 
