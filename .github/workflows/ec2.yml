@@ -35,3 +35,6 @@ jobs:
           export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           export DB_NAME=${{ secrets.DB_NAME }}
           export DB_PORT=${{ secrets.DB_PORT }}
+          export PORT=3000
+          chmod +x main
+          nohup npm run start:prod > nohup.out 2> nohup.err < /dev/null &
