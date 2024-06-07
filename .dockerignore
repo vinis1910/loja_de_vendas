@@ -1,4 +1,5 @@
-node_modules
-dist
-docker-cmopose.yaml
 Dockerfile
+.dockerignore
+node_modules
+npm-debug.log
+dist
