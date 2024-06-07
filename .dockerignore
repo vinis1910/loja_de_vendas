@@ -1,4 +1,4 @@
 node_modules
 dist
-docker-cmopose.yaml
+docker-compose.yaml
 Dockerfile
